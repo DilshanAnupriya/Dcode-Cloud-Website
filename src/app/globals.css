@@ -1,0 +1,371 @@
+@import "tailwindcss";
+
+/* dark: utilities follow the data-theme attribute the head script sets, not just the OS. */
+@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
+
+/* ---------------------------------------------------------------------------
+   Dcode Cloud website tokens.
+   Taken from the Dcode Cloud Design System used by Payflow:
+   red #C8102E = action, navy #14213D = structure, cool neutrals.
+   Layout concept: a circuit board. Products are chips, the platform is the
+   core, and everything is joined by traces that end in round terminals,
+   the same mark the logo uses.
+--------------------------------------------------------------------------- */
+@theme {
+  --color-paper: #f4f6fa;
+  --color-paper-2: #eaeef5;
+  --color-card: #ffffff;
+  --color-ink: #14213d;
+  --color-body: #3b4459;
+  --color-muted: #646d82;
+  --color-faint: #9aa1b4;
+  --color-line: #e1e4ec;
+  --color-line-2: #c9cedb;
+
+  --color-red: #c8102e;
+  --color-red-deep: #a50f26;
+  --color-red-bright: #e2374f;
+  --color-red-soft: #fbe3e7;
+
+  --color-navy-950: #0c1428;
+  --color-navy-900: #14213d;
+  --color-navy-850: #172647;
+  --color-navy-800: #1b2b4f;
+  --color-navy-700: #25376a;
+  --color-navy-400: #5f76a8;
+  --color-navy-200: #b8c3db;
+  --color-navy-100: #dce2ef;
+  --color-mist: #c6cddc;
+
+  --color-green: #0e9f6e;
+  --color-green-soft: #def7ec;
+  --color-green-ink: #065f46;
+  --color-amber: #d97706;
+  --color-amber-soft: #fcefd9;
+  --color-amber-ink: #92400e;
+
+  --ease-out-strong: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out-strong: cubic-bezier(0.77, 0, 0.175, 1);
+}
+
+@theme inline {
+  --font-display: var(--font-sora), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+
+@layer base {
+/* ---------- base ---------- */
+html {
+  background: var(--color-paper);
+  color-scheme: light;
+  -webkit-text-size-adjust: 100%;
+}
+@media (prefers-reduced-motion: no-preference) {
+  html { scroll-behavior: smooth; }
+}
+body {
+  font-family: var(--font-sans);
+  color: var(--color-body);
+  background: var(--color-paper);
+  font-size: 1.0625rem;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: clip;
+}
+@media (min-width: 1920px) { html { font-size: 17px; } }
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  color: var(--color-ink);
+  font-weight: 600;
+  letter-spacing: -0.032em;
+  line-height: 1.04;
+  text-wrap: balance;
+}
+p { text-wrap: pretty; }
+::selection { background: var(--color-red); color: #fff; }
+:focus-visible {
+  outline: 2px solid var(--color-red);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+[id] { scroll-margin-top: 96px; }
+}
+
+@layer components {
+/* ---------- layout ---------- */
+.container-x {
+  width: 100%;
+  max-width: 1320px;
+  margin-inline: auto;
+  padding-left: max(20px, env(safe-area-inset-left, 0px));
+  padding-right: max(20px, env(safe-area-inset-right, 0px));
+}
+@media (min-width: 768px) {
+  .container-x { padding-left: max(40px, env(safe-area-inset-left, 0px)); padding-right: max(40px, env(safe-area-inset-right, 0px)); }
+}
+
+/* ---------- type scale ---------- */
+.h-display {
+  font-size: clamp(2.6rem, 6.2vw, 5.6rem);
+  line-height: 0.98;
+  letter-spacing: -0.045em;
+}
+.h-section {
+  font-size: clamp(2.1rem, 4.4vw, 3.9rem);
+  line-height: 1.02;
+  letter-spacing: -0.04em;
+}
+.h-chapter {
+  font-size: clamp(1.7rem, 3vw, 2.6rem);
+  line-height: 1.08;
+  letter-spacing: -0.035em;
+}
+.lede {
+  font-size: clamp(1.075rem, 1.35vw, 1.25rem);
+  line-height: 1.6;
+  color: var(--color-body);
+}
+.mono {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+.num { font-variant-numeric: tabular-nums; }
+
+/* Eyebrow: a short trace ending in a terminal dot, the logo's mark. */
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+.eyebrow::before {
+  content: "";
+  width: 22px;
+  height: 7px;
+  flex: none;
+  background:
+    radial-gradient(circle at calc(100% - 3.5px) 50%, var(--color-red) 3.4px, transparent 3.9px),
+    linear-gradient(var(--color-red), var(--color-red)) left center / calc(100% - 6px) 2px no-repeat;
+}
+.on-dark .eyebrow { color: var(--color-navy-200); }
+.on-dark .eyebrow::before {
+  background:
+    radial-gradient(circle at calc(100% - 3.5px) 50%, var(--color-red-bright) 3.4px, transparent 3.9px),
+    linear-gradient(var(--color-red-bright), var(--color-red-bright)) left center / calc(100% - 6px) 2px no-repeat;
+}
+
+/* ---------- buttons ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  height: 52px;
+  padding-inline: 26px;
+  border-radius: 999px;
+  font-weight: 650;
+  font-size: 0.975rem;
+  letter-spacing: -0.005em;
+  white-space: nowrap;
+  transition:
+    transform 160ms var(--ease-out-strong),
+    background-color 200ms ease,
+    border-color 200ms ease,
+    color 200ms ease;
+  -webkit-tap-highlight-color: transparent;
+}
+.btn:active { transform: scale(0.97); }
+.btn-primary { background: var(--color-red); color: #fff; }
+.btn-primary:hover { background: var(--color-red-deep); }
+.btn-ghost { border: 1.5px solid var(--color-line-2); color: var(--color-ink); background: transparent; }
+.btn-ghost:hover { border-color: var(--color-ink); }
+.on-dark .btn-ghost { border-color: rgba(198, 205, 220, 0.35); color: #fff; }
+.on-dark .btn-ghost:hover { border-color: #fff; }
+.btn-sm { height: 42px; padding-inline: 18px; font-size: 0.9rem; gap: 10px; }
+
+.trace-arrow { flex: none; overflow: visible; }
+.trace-arrow line { transform-origin: 1px 5px; transition: transform 260ms var(--ease-out-strong); }
+.trace-arrow circle { transition: transform 260ms var(--ease-out-strong); }
+@media (hover: hover) and (pointer: fine) {
+  .btn:hover .trace-arrow line,
+  .link-trace:hover .trace-arrow line { transform: scaleX(1.35); }
+  .btn:hover .trace-arrow circle,
+  .link-trace:hover .trace-arrow circle { transform: translateX(5px); }
+}
+
+.link-trace {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  font-weight: 650;
+  color: var(--color-ink);
+}
+.link-trace span { background: linear-gradient(currentColor, currentColor) left bottom / 0% 1.5px no-repeat; transition: background-size 260ms var(--ease-out-strong); padding-bottom: 2px; }
+@media (hover: hover) and (pointer: fine) {
+  .link-trace:hover span { background-size: 100% 1.5px; }
+}
+.on-dark .link-trace { color: #fff; }
+
+/* ---------- surfaces ---------- */
+.board {
+  background: var(--color-card);
+  border: 1px solid var(--color-line);
+  border-radius: 22px;
+  box-shadow:
+    0 1px 0 rgba(20, 33, 61, 0.03),
+    0 30px 60px -32px rgba(20, 33, 61, 0.22);
+}
+.bg-dots {
+  background-image: radial-gradient(circle at 1px 1px, rgba(20, 33, 61, 0.14) 1px, transparent 0);
+  background-size: 22px 22px;
+}
+.bg-dots-dark {
+  background-image: radial-gradient(circle at 1px 1px, rgba(184, 195, 219, 0.12) 1px, transparent 0);
+  background-size: 22px 22px;
+}
+.bg-grid-dark {
+  background-image:
+    linear-gradient(rgba(95, 118, 168, 0.12) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(95, 118, 168, 0.12) 1px, transparent 1px);
+  background-size: 44px 44px;
+}
+
+/* Status label: a squared spec-sheet tag, not a pill. */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: 24px;
+  padding-inline: 8px;
+  border-radius: 6px;
+  border: 1px solid var(--color-line-2);
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+  background: var(--color-card);
+}
+.chip-live { color: var(--color-green-ink); border-color: color-mix(in oklab, var(--color-green) 38%, var(--color-line)); }
+.chip-build { color: var(--color-amber-ink); border-color: color-mix(in oklab, var(--color-amber) 38%, var(--color-line)); }
+.chip-dot::before { content: ""; width: 6px; height: 6px; border-radius: 1.5px; background: currentColor; }
+
+/* ---------- svg text ---------- */
+.svg-mono { font-family: var(--font-mono); letter-spacing: 0.08em; }
+.svg-display { font-family: var(--font-display); letter-spacing: -0.02em; font-weight: 600; }
+.svg-sans { font-family: var(--font-sans); }
+
+}
+
+/* ---------- motion helpers ---------- */
+/* The hero waits for its entrance timeline when JS runs. If the bundle never
+   arrives, the fallback animation unhides it after 2.5s anyway. */
+.js .hero-pre { visibility: hidden; animation: dc-unhide 0s linear 2.5s forwards; }
+@keyframes dc-unhide { to { visibility: visible; } }
+@media (prefers-reduced-motion: reduce) {
+  .js .hero-pre { visibility: visible; animation: none; }
+}
+
+.skip-link {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 100;
+  padding: 10px 16px;
+  border-radius: 10px;
+  background: var(--color-ink);
+  color: var(--color-paper);
+  transform: translateY(-160%);
+  transition: transform 200ms var(--ease-out-strong);
+}
+.skip-link:focus { transform: translateY(0); }
+
+/* Marquee track for the audit log band */
+.marquee-mask {
+  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+}
+
+/* ---------- illustrations ----------
+   SVG art is drawn with literal colours (GSAP animates them). Anything with
+   class "ill" sits on a light card in light mode; in dark mode the same
+   attributes are remapped here, so one drawing serves both themes. */
+:root { --mod-bg: #1b2b4f; }
+.ill [data-mod-bg] { fill: var(--mod-bg); }
+
+/* ---------- dark theme ---------- */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --color-paper: #0a0f1c;
+  --color-paper-2: #0f1626;
+  --color-card: #111a2d;
+  --color-ink: #eef1f7;
+  --color-body: #b9c1d3;
+  --color-muted: #8b94ab;
+  --color-faint: #5e6982;
+  --color-line: #1f2a44;
+  --color-line-2: #2e3b5a;
+  --color-red-soft: #2a1420;
+  --color-navy-100: #1c2843;
+  --color-green-soft: #0f2a22;
+  --color-green-ink: #6ee7b7;
+  --color-amber-soft: #2d2010;
+  --color-amber-ink: #fcd34d;
+  --mod-bg: #2a3d6a;
+}
+
+/* No transitions while the theme flips, so the page changes in one frame. */
+.theme-switching, .theme-switching *, .theme-switching *::before, .theme-switching *::after { transition: none !important; }
+
+[data-theme="dark"] .board {
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.03) inset, 0 30px 60px -32px rgba(0, 0, 0, 0.7);
+}
+[data-theme="dark"] .bg-dots {
+  background-image: radial-gradient(circle at 1px 1px, rgba(184, 195, 219, 0.11) 1px, transparent 0);
+}
+/* Navy bands sit just above the page in dark mode; a hairline keeps the edge. */
+[data-theme="dark"] section.on-dark, [data-theme="dark"] footer.on-dark {
+  box-shadow: inset 0 1px 0 rgba(184, 195, 219, 0.08), inset 0 -1px 0 rgba(184, 195, 219, 0.06);
+}
+[data-theme="dark"] ::selection { color: #fff; }
+
+/* Surfaces */
+[data-theme="dark"] .ill :not(text, tspan)[fill="#ffffff" i],
+[data-theme="dark"] .ill :not(text, tspan)[fill="#fff" i] { fill: #111a2d; }
+[data-theme="dark"] .ill circle[stroke="#ffffff" i] { stroke: #111a2d; }
+[data-theme="dark"] .ill [fill="#f4f6fa" i], [data-theme="dark"] .ill [fill="#eaeef5" i] { fill: #0e1627; }
+[data-theme="dark"] .ill :not(text, tspan)[fill="#14213d" i] { fill: #1e2f57; }
+[data-theme="dark"] .ill [stroke="#1f3060" i] { stroke: #2f4374; }
+
+/* Lines and traces */
+[data-theme="dark"] .ill [stroke="#e1e4ec" i] { stroke: #26324f; }
+[data-theme="dark"] .ill [fill="#e1e4ec" i] { fill: #26324f; }
+[data-theme="dark"] .ill [stroke="#dce2ef" i] { stroke: #1c2843; }
+[data-theme="dark"] .ill [fill="#dce2ef" i] { fill: #1c2843; }
+[data-theme="dark"] .ill [stroke="#c9cedb" i] { stroke: #33415f; }
+[data-theme="dark"] .ill [fill="#c9cedb" i] { fill: #33415f; }
+[data-theme="dark"] .ill :not(text, tspan)[stroke="#b8c3db" i] { stroke: #3a4a70; }
+[data-theme="dark"] .ill :not(text, tspan)[fill="#b8c3db" i] { fill: #3a4a70; }
+[data-theme="dark"] .ill [stroke="#25376a" i] { stroke: #5a74b0; }
+[data-theme="dark"] .ill [fill="#25376a" i] { fill: #5a74b0; }
+[data-theme="dark"] .ill [stroke="#9aa1b4" i] { stroke: #4a5675; }
+
+/* Text */
+[data-theme="dark"] .ill text[fill="#14213d" i], [data-theme="dark"] .ill tspan[fill="#14213d" i] { fill: #eef1f7; }
+[data-theme="dark"] .ill text[fill="#3b4459" i] { fill: #b9c1d3; }
+[data-theme="dark"] .ill text[fill="#646d82" i] { fill: #8b94ab; }
+[data-theme="dark"] .ill text[fill="#9aa1b4" i] { fill: #6b7690; }
+
+/* Status tints */
+[data-theme="dark"] .ill [fill="#def7ec" i] { fill: #0f2a22; }
+[data-theme="dark"] .ill [fill="#fbe3e7" i] { fill: #2a1420; }
+[data-theme="dark"] .ill [fill="#f3c9d0" i] { fill: #5a2030; }
+[data-theme="dark"] .ill [fill="#065f46" i] { fill: #6ee7b7; }
